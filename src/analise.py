@@ -7,8 +7,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
-
-# Caminhos dos arquivos
 PASTA_PROJETO = Path(__file__).resolve().parent.parent
 
 ARQUIVO_ENTRADA = PASTA_PROJETO / "dados" / "dados_com_grupos.csv"
@@ -23,18 +21,14 @@ def analisar_dados():
         print("Arquivo dados_com_grupos.csv não encontrado!")
         return
 
-    # Carrega os dados
     df = pd.read_csv(ARQUIVO_ENTRADA)
 
-    # Cria a pasta de gráficos, caso não exista
     PASTA_GRAFICOS.mkdir(parents=True, exist_ok=True)
 
-    # Seleciona e padroniza os preços
     X = df[["preco"]]
     scaler = StandardScaler()
     X_padronizado = scaler.fit_transform(X)
 
-    # Recria o modelo para obter a inércia
     modelo = KMeans(
         n_clusters=3,
         random_state=42,
@@ -43,7 +37,6 @@ def analisar_dados():
 
     modelo.fit(X_padronizado)
 
-    # Calcula as métricas
     silhouette = silhouette_score(
         X_padronizado,
         df["grupo"]
@@ -55,7 +48,6 @@ def analisar_dados():
     print(f"Silhouette Score: {silhouette:.4f}")
     print(f"Inércia: {inercia:.4f}")
 
-    # Estatísticas dos grupos
     print("\n===== RESUMO DOS GRUPOS =====")
 
     resumo = df.groupby("grupo")["preco"].agg(
@@ -64,7 +56,7 @@ def analisar_dados():
 
     print(resumo.round(2))
 
-    # GRÁFICO 1: Histograma dos preços
+    # GRÁFICO 1
     plt.figure(figsize=(9, 5))
 
     plt.hist(df["preco"], bins=10, edgecolor="black")
@@ -77,7 +69,7 @@ def analisar_dados():
     plt.savefig(PASTA_GRAFICOS / "distribuicao_precos.png")
     plt.close()
 
-    # GRÁFICO 2: Dispersão dos preços por grupo
+    # GRÁFICO 2
     plt.figure(figsize=(10, 5))
 
     plt.scatter(
@@ -97,7 +89,7 @@ def analisar_dados():
     plt.savefig(PASTA_GRAFICOS / "grupos_precos.png")
     plt.close()
 
-    # GRÁFICO 3: Quantidade de livros por grupo
+    # GRÁFICO 3
     plt.figure(figsize=(8, 5))
 
     quantidade = df["grupo"].value_counts().sort_index()

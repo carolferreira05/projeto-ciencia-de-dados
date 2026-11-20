@@ -1,25 +1,18 @@
-
 import os
 import sys
 from pathlib import Path
 
-
-# Identifica a pasta principal do projeto
 PASTA_PROJETO = Path(__file__).resolve().parent
 
-# Adiciona a pasta src ao caminho de importação
 sys.path.insert(0, str(PASTA_PROJETO / "src"))
 
-# Garante que os arquivos sejam salvos na pasta correta
 os.chdir(PASTA_PROJETO)
-
 
 # Importa as funções dos outros arquivos
 from scraping import coletar_dados_livros
 from tratamento import tratar_dados
 from algoritmo import aplicar_kmeans
 from analise import analisar_dados
-
 
 def executar_projeto():
 
@@ -28,7 +21,6 @@ def executar_projeto():
     print("ANÁLISE DE PREÇOS DE LIVROS")
     print("=" * 50)
 
-    # ETAPA 1: Crawler e Scraping
     print("\n[1/4] COLETA DOS DADOS")
 
     dados_brutos = coletar_dados_livros(
@@ -40,7 +32,6 @@ def executar_projeto():
         print("Não foi possível coletar os dados.")
         return
 
-    # ETAPA 2: Tratamento
     print("\n[2/4] TRATAMENTO DOS DADOS")
 
     dados_tratados = tratar_dados()
@@ -49,7 +40,6 @@ def executar_projeto():
         print("Não foi possível tratar os dados.")
         return
 
-    # ETAPA 3: K-Means
     print("\n[3/4] APLICAÇÃO DO K-MEANS")
 
     dados_classificados = aplicar_kmeans()
@@ -58,7 +48,6 @@ def executar_projeto():
         print("Não foi possível aplicar o K-Means.")
         return
 
-    # ETAPA 4: Análise e gráficos
     print("\n[4/4] ANÁLISE DOS RESULTADOS")
 
     analisar_dados()

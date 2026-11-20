@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import time
 
-
 def coletar_links_livros(max_paginas=None):
 
     url_atual = "https://books.toscrape.com/index.html"
@@ -12,7 +11,6 @@ def coletar_links_livros(max_paginas=None):
     links_livros = []
     paginas_visitadas = set()
 
-    # Criando uma sessão para realizar as requisições
     sessao = requests.Session()
 
     sessao.headers.update({
@@ -23,7 +21,6 @@ def coletar_links_livros(max_paginas=None):
 
     while url_atual:
 
-        # Evita visitar a mesma página mais de uma vez
         if url_atual in paginas_visitadas:
             break
 
@@ -40,10 +37,8 @@ def coletar_links_livros(max_paginas=None):
             print(f"Erro ao acessar a página: {erro}")
             break
 
-        # Interpretando o conteúdo HTML
         soup = BeautifulSoup(resposta.text, "html.parser")
 
-        # Encontrando todos os livros da página
         livros = soup.select("article.product_pod")
 
         for livro in livros:
@@ -56,7 +51,6 @@ def coletar_links_livros(max_paginas=None):
 
         print(f"Livros encontrados: {len(livros)}")
 
-        # Verificando se existe uma próxima página
         proxima_pagina = soup.select_one("li.next a")
 
         if proxima_pagina:
@@ -67,16 +61,13 @@ def coletar_links_livros(max_paginas=None):
         else:
             url_atual = None
 
-        # Limite opcional para testes
         if max_paginas and numero_pagina >= max_paginas:
             break
 
-        # Pequena pausa entre as requisições
         time.sleep(1)
 
     sessao.close()
 
-    # Removendo possíveis links duplicados
     links_livros = list(dict.fromkeys(links_livros))
 
     print("\n===== RESULTADO DO CRAWLER =====")

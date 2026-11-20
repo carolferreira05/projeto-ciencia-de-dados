@@ -1,4 +1,3 @@
-
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -8,8 +7,6 @@ import time
 
 from crawler import coletar_links_livros
 
-
-# Conversão das avaliações em números
 avaliacoes = {
     "One": 1,
     "Two": 2,
@@ -31,11 +28,9 @@ def extrair_dados_livro(url, sessao):
 
     soup = BeautifulSoup(resposta.text, "html.parser")
 
-    # Extraindo o título
     titulo = soup.select_one("div.product_main h1")
     titulo = titulo.get_text(strip=True) if titulo else None
 
-    # Extraindo o preço
     preco = soup.select_one("p.price_color")
 
     if preco:
@@ -44,7 +39,6 @@ def extrair_dados_livro(url, sessao):
     else:
         preco = None
 
-    # Extraindo a avaliação
     avaliacao_elemento = soup.select_one(
         "p.star-rating"
     )
@@ -59,7 +53,6 @@ def extrair_dados_livro(url, sessao):
                 avaliacao = avaliacoes[classe]
                 break
 
-    # Extraindo a disponibilidade
     disponibilidade = soup.select_one(
         "p.instock.availability"
     )
@@ -71,7 +64,6 @@ def extrair_dados_livro(url, sessao):
     else:
         disponibilidade = None
 
-    # Extraindo a categoria
     categorias = soup.select("ul.breadcrumb li a")
 
     if categorias:
@@ -93,12 +85,10 @@ def coletar_dados_livros(max_livros=5, max_paginas=2):
 
     print("\nIniciando o processo de scraping...")
 
-    # Obtendo os links através do crawler
     links = coletar_links_livros(
         max_paginas=max_paginas
     )
 
-    # Aplicando limite para testes
     if max_livros is not None:
         links = links[:max_livros]
 
@@ -125,10 +115,8 @@ def coletar_dados_livros(max_livros=5, max_paginas=2):
 
     sessao.close()
 
-    # Criando a pasta de dados, caso não exista
     os.makedirs("dados", exist_ok=True)
 
-    # Salvando os dados brutos em CSV
     caminho_arquivo = os.path.join(
         "dados",
         "dados_brutos.csv"

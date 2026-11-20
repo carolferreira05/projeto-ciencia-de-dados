@@ -5,8 +5,6 @@ from pathlib import Path
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
-
-# Caminhos dos arquivos
 PASTA_PROJETO = Path(__file__).resolve().parent.parent
 
 ARQUIVO_ENTRADA = PASTA_PROJETO / "dados" / "dados_tratados.csv"
@@ -17,43 +15,34 @@ def aplicar_kmeans():
 
     print("Iniciando a aplicação do K-Means...")
 
-    # Verifica se o arquivo existe
     if not ARQUIVO_ENTRADA.exists():
         print("Arquivo dados_tratados.csv não encontrado!")
         return None
 
-    # Carrega os dados tratados
     df = pd.read_csv(ARQUIVO_ENTRADA)
 
     print(f"\nLivros carregados: {len(df)}")
 
-    # Seleciona somente a variável preço
     X = df[["preco"]]
 
-    # Padroniza os preços
     scaler = StandardScaler()
     X_padronizado = scaler.fit_transform(X)
 
-    # Cria e treina o modelo K-Means
     modelo = KMeans(
         n_clusters=3,
         random_state=42,
         n_init=10
     )
 
-    # Adiciona a identificação do grupo ao DataFrame
     df["grupo"] = modelo.fit_predict(X_padronizado)
 
-    # Calcula estatísticas de cada grupo
     resultado = df.groupby("grupo")["preco"].agg(
         ["count", "min", "mean", "max"]
     )
 
-    # Exibe os resultados
     print("\n===== RESULTADO DO K-MEANS =====")
     print(resultado.round(2))
 
-    # Salva os dados com os grupos identificados
     df.to_csv(
         ARQUIVO_SAIDA,
         index=False,
