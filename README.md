@@ -8,9 +8,7 @@ A partir dos dados coletados, foi aplicado o algoritmo K-Means para identificar 
 
 ## 2. Fonte dos dados
 
-A fonte utilizada foi o Books to Scrape, um site de demonstração desenvolvido para atividades de web scraping.
-
-Foram coletados 50 livros, respeitando o limite estabelecido para o projeto.
+A fonte utilizada foi o Books to Scrape, um site de demonstração desenvolvido para atividades de web scraping. Foram coletados 50 livros.
 
 As informações extraídas foram:
 
